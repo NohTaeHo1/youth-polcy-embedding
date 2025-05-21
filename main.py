@@ -27,17 +27,18 @@
     # uvicorn.run("main:app", reload=True, host="127.0.0.1", port=8000, log_level="info")
 
 from app.crawl.youth_policy_api import fetch_all_policies
-from app.database.mongodb import insert_policies
+from app.database.mongodb import insert_policies, export_embeddings_to_excel
 from app.preprocess.process_save import update_processed_policies
 
 def main():
-    policies = fetch_all_policies()
-    if not policies:
-        print("정책 데이터가 없습니다. 종료합니다.")
-        return
+    # policies = fetch_all_policies()
+    # if not policies:
+    #     print("정책 데이터가 없습니다. 종료합니다.")
+    #     return
 
-    insert_policies(policies)  # seoul_policies 저장
-    update_processed_policies()  # processed_policies 정제 저장
+    # insert_policies(policies)  
+    update_processed_policies()
+    export_embeddings_to_excel()
 
 if __name__ == "__main__":
     main()
