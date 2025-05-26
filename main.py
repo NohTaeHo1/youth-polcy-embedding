@@ -26,10 +26,8 @@
     # import uvicorn
     # uvicorn.run("main:app", reload=True, host="127.0.0.1", port=8000, log_level="info")
 
-from app.crawl.youth_policy_api import fetch_all_policies
 from app.database.mongodb import insert_policies, export_embeddings_to_excel
-from app.preprocess.process_save import update_processed_policies
-
+from app.preprocess.run_pipeline import run_pipeline
 def main():
     # policies = fetch_all_policies()
     # if not policies:
@@ -37,8 +35,11 @@ def main():
     #     return
 
     # insert_policies(policies)  
-    update_processed_policies()
-    export_embeddings_to_excel()
+    # update_processed_policies()
+    # export_embeddings_to_excel()
+    # process_and_save_policies()
+    run_pipeline()
+
 
 if __name__ == "__main__":
     main()

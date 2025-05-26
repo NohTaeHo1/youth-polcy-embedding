@@ -42,7 +42,3 @@ def fetch_all_policies(max_pages=500, page_size=100):
             break
 
     return all_policies
-
-if __name__ == "__main__":
-    result = fetch_all_policies()
-    print(f"총 수집 정책 수: {len(result)}")

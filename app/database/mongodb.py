@@ -39,3 +39,8 @@ def export_embeddings_to_excel():
 
     df.to_csv("embedding_texts.csv", index=False, encoding='utf-8-sig')
     print("저장 완료: embedding_texts.csv")
+
+
+def get_collection(db_name: str, collection_name: str):
+    client = MongoClient(MONGO_URI)
+    return client[db_name][collection_name]
