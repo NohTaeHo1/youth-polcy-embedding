@@ -1,6 +1,7 @@
+version: '3.8'
 services:
-  BE:
-    container_name: BE
+  be:
+    container_name: be
     build:
       context: ./BE
       dockerfile: Dockerfile
@@ -8,13 +9,14 @@ services:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
-      - DATABASE_URL=postgresql://postgres:password@db:5432/youth_policy_embedding
-      - API_KEY=
+      - MONGODB_URL='mongodb+srv://llmteam:llmteam123$@llm-cluster.zkkxnm3.mongodb.net/?retryWrites=true&w=majority&appName=llm-cluster'
+      - ONTO_API_KEY=fae4bce6-a7b9-437f-af07-4293a2e16840
+      - PINECONE_API_KEY='pcsk_5ACT98_7pTiTzDhGmkSA4dj9Jr4RxCXmYqUBEwhE57fSA5hHGpCKpcAiZMXX2pHtRXYcjF'
     networks:
       - service_network
 
-  FE:
-    container_name: FE
+  fe:
+    container_name: fe
     build:
       context: ./FE
       dockerfile: Dockerfile
@@ -26,7 +28,6 @@ services:
       - service_network
 
   ollama:
-    image: ollama/ollama:latest
     container_name: ollama
     build:
       context: ./ollama
@@ -42,16 +43,17 @@ services:
       - TF_FORCE_GPU_ALLOW_GROWTH=true  # 메모리 동적 할당
     networks:
       - service_network
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            count: 1
-            capabilities: [gpu]
-  networks:
-    service_network:
-      driver: bridge
-      ipam:
-        config:
-          - subnet: 172.19.0.0/16
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #       - driver: nvidia
+    #         count: 1
+    #         capabilities: [gpu]
+
+networks:
+  service_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16

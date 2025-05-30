@@ -1,5 +1,5 @@
 # 베이스 이미지: Slim 버전으로 경량화
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 # 작업 디렉토리 설정
 WORKDIR /app  
@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Python 의존성 설치
+# # Python 의존성 설치
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
