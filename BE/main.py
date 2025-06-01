@@ -1,9 +1,9 @@
-# from fastapi import FastAPI
+from fastapi import FastAPI
 
 # from app.routes.schedule_route import start_scheduler, shutdown_scheduler
 # from app.routes.startup_route import save_mongodb
 
-# app = FastAPI()
+app = FastAPI()
 
 
 # @app.get("/")
@@ -41,5 +41,7 @@ def main():
     run_pipeline()
 
 
-if __name__ == "__main__":
-    main()
+
+# unvicorn main:app --reload --host 실행을 위한 아래는 주석 처리.
+# if __name__ == "__main__":
+#     main()
