@@ -9,9 +9,7 @@ services:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
-      - MONGODB_URL='mongodb+srv://llmteam:llmteam123$@llm-cluster.zkkxnm3.mongodb.net/?retryWrites=true&w=majority&appName=llm-cluster'
-      - ONTO_API_KEY=fae4bce6-a7b9-437f-af07-4293a2e16840
-      - PINECONE_API_KEY='pcsk_5ACT98_7pTiTzDhGmkSA4dj9Jr4RxCXmYqUBEwhE57fSA5hHGpCKpcAiZMXX2pHtRXYcjF'
+      
     networks:
       - service_network
 
