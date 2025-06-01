@@ -1,10 +1,13 @@
-import json
 import requests
 from app.config import ONTO_API_KEY
+import certifi
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def fetch_all_policies(max_pages=500, page_size=100):
     """
-    온통청년 정책 전체 페이지를 순회하며 데이터를 수집합니다.
+    온통청년 정책 전체 페이지를 순회하며 데이터를 수집
 
     Args:
         max_pages (int): 최대 몇 페이지까지 반복할지 설정
@@ -25,7 +28,8 @@ def fetch_all_policies(max_pages=500, page_size=100):
         }
 
         try:
-            response = requests.get(url, params=payload, timeout=10)
+            # 인증서 오류로 'verify=False' 해놓음음
+            response = requests.get(url, params=payload, timeout=10, verify=False)
             response.raise_for_status()
             data = response.json()
 

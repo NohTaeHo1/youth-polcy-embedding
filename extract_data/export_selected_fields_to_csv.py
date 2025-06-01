@@ -5,7 +5,7 @@ from app.config import MONGO_URI
 
 def export_selected_fields_to_csv(
     db_name="youth_policies",
-    collection_name="metadata_store",
+    collection_name="detail_db",
     output_path="exported_policies.csv",
     fields=None
 ):
