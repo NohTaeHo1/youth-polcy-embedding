@@ -1,2 +1,6 @@
 *.env
 *.yml
+*.pyc
+__pycache__/
+*.py[cod]
+models/

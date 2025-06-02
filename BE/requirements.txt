@@ -1,0 +1,12 @@
+uvicorn
+fastapi
+pymongo
+python-dotenv
+requests
+beautifulsoup4
+lxml
+sentence-transformers
+pytz
+selenium
+pandas
+pinecone
