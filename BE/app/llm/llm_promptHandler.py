@@ -6,7 +6,21 @@ class promptHandler:
         
         
         """
-        
+    def rag_prompt(context, query):
+        """
+        RAG 프롬프트 생성
+        :param query: 사용자 질문
+        :param context: 정책 데이터
+        :return: LLM에 전달할 프롬프트 문자열
+        """
+        return f"""아래는 청년 정책 데이터입니다.
+
+        {context}
+
+        사용자 질문: {query}
+
+        위 정책 정보를 참고하여 답변을 생성해 주세요.
+        """
 
     def test_prompt(self):
         """

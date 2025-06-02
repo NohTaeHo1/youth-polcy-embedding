@@ -41,15 +41,22 @@ app = FastAPI()
     # run_pipeline()
 
 from app.database.mongodb import get_mongo_client
+import json
+from bson import json_util
 
 @app.get("/mongo/collections")
 def list_collections_and_fields(db_name: str = "youth_policies"):
     client = get_mongo_client()
     db = client[db_name]
+    result = {}
     for name in db.list_collection_names():
         # 각 컬렉션에서 샘플 1개 문서의 키만 추출
         doc = db[name].find_one()
-    return doc
+        if doc:
+            # ObjectId를 문자열로 변환
+            doc_str = json.loads(json_util.dumps(doc))
+            result[name] = doc_str
+    return result
 
 # unvicorn main:app --reload --host 실행을 위한 아래는 주석 처리.
 # if __name__ == "__main__":
