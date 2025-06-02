@@ -8,5 +8,9 @@ lxml
 sentence-transformers
 pytz
 selenium
+<<<<<<< HEAD
 pandas
 pinecone
+=======
+pandas
+>>>>>>> service
