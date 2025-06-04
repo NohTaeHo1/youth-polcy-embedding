@@ -13,6 +13,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # 빌드된 정적 파일을 Nginx로 복사
+ENV CHOKIDAR_USEPOLLING=true
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Nginx 포트
