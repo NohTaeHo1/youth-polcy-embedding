@@ -111,3 +111,5 @@ def create_filtered_collection(source_collection_name: str,
     print(f"총 {processed_count}개의 문서가 저장되었습니다.")
     if skipped_count > 0:
         print(f"{skipped_count}개의 문서는 중복 또는 오류로 건너뛰었거나 삽입에 실패했습니다.")
+
+
