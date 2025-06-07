@@ -194,3 +194,15 @@ class HybridSearcher:
                     "support_content": policy_detail.get("plcySprtCn")
                 })
         return results
+    
+    def serialize_mongo_doc(doc: Dict) -> Dict:
+        """MongoDB 문서에서 ObjectId를 문자열로 변환"""
+        if not doc:
+            return {}
+        serialized = {}
+        for key, value in doc.items():
+            if isinstance(value, ObjectId):
+                serialized[key] = str(value)
+            else:
+                serialized[key] = value
+        return serialized
