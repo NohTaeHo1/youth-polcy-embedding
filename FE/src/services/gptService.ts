@@ -29,7 +29,7 @@ export const generatePolicyResponse = async (
     if (profile?.region) body.region = profile.region;
     if (profile?.category) body.category = profile.category;
 
-    const response = await fetch("http://localhost:8000/search/hybrid", {
+    const response = await fetch("http://be:8000/search/hybrid", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -37,7 +37,7 @@ export const generatePolicyResponse = async (
 
     if (!response.ok) throw new Error("정책 정보를 가져오는데 실패했습니다.");
     const data = await response.json();
-    return formatPolicyResults(data.results);
+    return formatPolicyResults(data.results || []);
   } catch (error) {
     console.error("정책 정보 생성 오류:", error);
     toast.error("정책 정보를 가져오는데 문제가 발생했습니다.");

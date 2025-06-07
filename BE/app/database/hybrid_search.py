@@ -110,7 +110,7 @@ class HybridSearcher:
         print("No policies found matching any conditions")
         return []  # 아무 조건도 만족하지 않음
     
-    def semantic_search(self, query: str, policy_ids: Optional[List[str]] = None, top_k: int = 3, similarity_threshold: float = 0.7) -> Dict:
+    def semantic_search(self, query: str, policy_ids: Optional[List[str]] = None, top_k: int = 3, similarity_threshold: float = 0.3) -> Dict:
         """Pinecone에서 쿼리로 가장 유사한 정책 검색"""
         try:
             query_embedding = self.embedder.get_embedding(query)
