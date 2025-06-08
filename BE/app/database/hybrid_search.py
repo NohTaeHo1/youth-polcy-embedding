@@ -3,6 +3,7 @@ import os
 from pinecone import Pinecone
 from app.database.mongodb import get_mongo_client
 from app.llm.llm_embed import SentenceTransformerEmbedder
+from bson import ObjectId
 
 class HybridSearcher:
     def __init__(self):
@@ -195,6 +196,7 @@ class HybridSearcher:
                 })
         return results
     
+    @staticmethod
     def serialize_mongo_doc(doc: Dict) -> Dict:
         """MongoDB 문서에서 ObjectId를 문자열로 변환"""
         if not doc:

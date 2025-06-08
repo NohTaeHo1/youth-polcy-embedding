@@ -17,6 +17,10 @@ RUN apt-get update && apt-get install -y curl dos2unix && rm -rf /var/lib/apt/li
 
 RUN apt-get update && apt-get install -y intel-opencl-icd
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
 # # Copy entrypoint script and set execute permissions
 # COPY llama-3.2-Korean-Bllossom-3B-gguf-Q4_K_M.gguf /usr/local/bin/llama-3.2-Korean-Bllossom-3B-gguf-Q4_K_M.gguf
 # COPY Bllossom_Modelfile /usr/local/bin/Modelfile

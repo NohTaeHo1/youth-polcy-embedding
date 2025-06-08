@@ -28,8 +28,8 @@ export const generatePolicyResponse = async (
     }
     if (profile?.region) body.region = profile.region;
     if (profile?.category) body.category = profile.category;
-
-    const response = await fetch("http://be:8000/search/hybrid", {
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+    const response = await fetch(`${API_URL}/llm/predict`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -37,7 +37,16 @@ export const generatePolicyResponse = async (
 
     if (!response.ok) throw new Error("정책 정보를 가져오는데 실패했습니다.");
     const data = await response.json();
-    return formatPolicyResults(data.results || []);
+    
+    if (data.mode === "llm" && data.llm_response) {
+      return data.llm_response;
+    } else if (data.results) {
+      return formatPolicyResults(data.results);
+    } else if (data.llm_response) {
+      return data.llm_response;
+    } else {
+      return "죄송합니다. 정책 정보를 가져오는 중에 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+    }
   } catch (error) {
     console.error("정책 정보 생성 오류:", error);
     toast.error("정책 정보를 가져오는데 문제가 발생했습니다.");

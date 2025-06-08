@@ -5,13 +5,13 @@ from app.database.hybrid_search import HybridSearcher
 from app.database.mongodb import get_mongo_client
 from app.services.pipeline_orchestrator import run_full_pipeline
 from app.llm.ollama_api import OllamaChatClient
-from app.llm.llm_promptHandler import rag_prompt
+from app.llm.llm_promptHandler import rag_prompt, classify_query_prompt
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 import uvicorn
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-
+import time
 # scheduler = AsyncIOScheduler()
 
 # def scheduled_job():
@@ -191,34 +191,43 @@ async def llm_predict(request: SearchRequest) -> Dict:
     """
     LLM 모델을 사용한 예측 API (RAG 방식)
     """
-    # 1. hybrid_search로 정책 context 추출
-    searcher = HybridSearcher()
-    filtered_ids = searcher.filter_by_conditions(
+    client = OllamaChatClient()
+    classification = client.send_request(classify_query_prompt(request.query)).get("result", "").strip().upper()
+    print(f"Classification result: {classification}")
+    if classification not in ["RAG", "CLASSIFICATION"]:
+        response = client.send_request(request.query)
+        return {"mode": "llm", "llm_response": response.get("result", "")}
+    
+    else:
+        # 1. hybrid_search로 정책 context 추출
+        start = time.time()
+        searcher = HybridSearcher()
+        filtered_ids = searcher.filter_by_conditions(
         min_age=request.min_age,
         max_age=request.max_age,
         region=request.region,
         category=request.category
-    )
-    semantic_results = searcher.semantic_search(
+        )
+        semantic_results = searcher.semantic_search(
         query=request.query,
         policy_ids=filtered_ids,
         top_k=request.top_k
-    )
-    
-    # 2. 가장 유사도가 높은 정책 ID 선택
-    if not semantic_results.get("matches"):
-        return {"message": "조건에 맞는 정책이 없습니다.", "response": ""}
+        )
 
-    top_match = max(semantic_results["matches"], key=lambda x: x["score"])
-    policy_id = top_match["id"]
-    
-    # 3. MongoDB에서 정책 데이터 조회
-    policy_detail = searcher.policy_collection.find_one({"plcyNo": policy_id})
-    if not policy_detail:
-        return {"message": f"ID {policy_id}에 해당하는 정책을 찾을 수 없습니다.", "response": ""}
-    
-    # 4. 정책 데이터를 context로 포맷팅
-    context = (
+        # 2. 가장 유사도가 높은 정책 ID 선택
+        if not semantic_results.get("matches"):
+            return {"message": "조건에 맞는 정책이 없습니다.", "response": ""}
+
+        top_match = max(semantic_results["matches"], key=lambda x: x["score"])
+        policy_id = top_match["id"]
+
+        # 3. MongoDB에서 정책 데이터 조회
+        policy_detail = searcher.policy_collection.find_one({"plcyNo": policy_id})
+        if not policy_detail:
+            return {"message": f"ID {policy_id}에 해당하는 정책을 찾을 수 없습니다.", "response": ""}
+
+        # 4. 정책 데이터를 context로 포맷팅
+        context = (
         f"**정책명**: {policy_detail.get('plcyNm', '')}\n"
         f"**설명**: {policy_detail.get('plcyExplnCn', '')}\n"
         f"**카테고리**: {', '.join(policy_detail.get('clsfNm', []))}\n"
@@ -230,22 +239,26 @@ async def llm_predict(request: SearchRequest) -> Dict:
         f"**연락처**: {policy_detail.get('etcMttrCn', '')}\n"
         f"**추가 신청 조건**: {policy_detail.get('addAplyQlfcCndCn', '')}\n"
         f"**참고 URL**: {policy_detail.get('refUrlAddr1', '')}"
-    )
-    
-    # 5. RAG 프롬프트 생성
-    prompt = rag_prompt(context, request.query)
-    
-    # 6. LLM 호출
-    client = OllamaChatClient()
-    response = client.send_request(prompt)
-    
-    # 7. 응답 반환 (policy_detail 직렬화)
-    return {
-        "policy_id": policy_id,
-        "similarity_score": top_match["score"],
-        "policy_details": searcher.serialize_mongo_doc(policy_detail),  # ObjectId 직렬화
-        "llm_response": response.get("response", "")
-    }
+        )
+
+        # 5. RAG 프롬프트 생성
+        prompt = rag_prompt(context, request.query)
+
+        # 6. LLM 호출
+        response = client.send_request(prompt)
+        response = response.get("result", "")
+        end = time.time()
+
+        # 7. 응답 반환 (policy_detail 직렬화)
+        return {
+            "time": end - start,
+            "mode": "rag",
+            "query": request.query,
+            "policy_id": policy_id,
+            "similarity_score": top_match["score"],
+            "policy_details": HybridSearcher.serialize_mongo_doc(policy_detail),  # ObjectId 직렬화
+            "llm_response": response
+        }
 
 
 # @app.post("/llm/predict")
