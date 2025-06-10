@@ -53,9 +53,6 @@
 1. 이 프로젝트 폴더(`youth-polcy-embedding`)로 이동합니다.
 2. 터미널(명령 프롬프트, PowerShell, 또는 VS Code 터미널)에서 아래 명령어를 실행합니다.
 3. docker-compose.yml 파일 아래 be 아래 environment:에 아래 세줄 추가.
-- MONGODB_URL=mongodb+srv://llmteam:llmteam123$@llm-cluster.zkkxnm3.mongodb.net/?retryWrites=true&w=majority&appName=llm-cluster
-- ONTO_API_KEY=fae4bce6-a7b9-437f-af07-4293a2e16840
-- PINECONE_API_KEY=pcsk_5ACT98_7pTiTzDhGmkSA4dj9Jr4RxCXmYqUBEwhE57fSA5hHGpCKpcAiZMXX2pHtRXYcjF
 4. docker compose up --build or docker-compose up --build
  - 처음 실행 시 필요한 이미지와 모델을 다운로드하므로 시간이 소요됩니다.
  - docker compose down or ctrl + c or docker-compose down 으로 실행 도커 내릴 수 있음.
