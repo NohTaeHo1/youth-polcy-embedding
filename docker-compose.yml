@@ -1,0 +1,71 @@
+version: '3.8'
+services:
+  be:
+    container_name: be
+    build:
+      context: ./BE
+      dockerfile: Dockerfile
+    volumes:
+      - ./BE:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      
+      
+    command: 
+      - uvicorn
+      - main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --reload
+    networks:
+      - service_network
+
+  fe:
+    container_name: fe
+    build:
+      context: ./FE
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./FE:/app
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - service_network
+
+  ollama:
+    container_name: ollama
+    build:
+      context: ./ollama
+      dockerfile: Dockerfile
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./models:/models
+    environment:
+      - OLLAMA_API_PORT=11434
+      - OLLAMA_HOST=0.0.0.0:11434
+      - LLAMA_CLBLAST=1
+      - ONEAPI_DEVICE_SELECTOR=level_zero:0
+      - ZES_ENABLE_SYSMAN=1
+      - SYCL_CACHE_PERSISTENT=1
+    command: >
+      "ollama pull gemma3:1b"
+    networks:
+      - service_network
+    restart: always
+
+networks:
+  service_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
