@@ -272,7 +272,7 @@ export const useConversationHandlers = ({
       ], profile);
       addBotMessage(response);
       setOptions([
-        "다른 질문하기", "정보 저장하기", "공유하기", "신청방법 자세히 알아보기"
+        "시뮬레이션", "신청방법 자세히 알아보기", "다른 질문하기", "나중에 하기"
       ]);
       setInputDisabled(true);
     } catch (error) {
@@ -299,6 +299,13 @@ export const useConversationHandlers = ({
         addBotMessage("정책 신청 방법:\n1. 해당 정책 운영 기관 웹사이트 방문\n2. 회원가입 후 로그인\n3. 신청서 작성 및 제출\n4. 필요 서류 업로드\n5. 심사 결과 대기\n\n자세한 내용은 해당 기관의 고객센터로 문의하시기 바랍니다.");
         setInputDisabled(false);
       }, 1500);
+    } else if (option === "시뮬레이션") {
+      window.location.href = "/simulator";  // 시뮬레이터 페이지로 이동
+      return;
+    } else if (option === "나중에 하기") {
+      addBotMessage("언제든지 다시 계산하실 수 있습니다.");
+      setOptions(["새로운 정책 검색하기", "대화 종료하기"]);
+      setInputDisabled(true);
     }
   };
 

@@ -228,17 +228,17 @@ async def llm_predict(request: SearchRequest) -> Dict:
 
         # 4. 정책 데이터를 context로 포맷팅
         context = (
-        f"**정책명**: {policy_detail.get('plcyNm', '')}\n"
-        f"**설명**: {policy_detail.get('plcyExplnCn', '')}\n"
-        f"**카테고리**: {', '.join(policy_detail.get('clsfNm', []))}\n"
-        f"**지원 대상 나이**: {policy_detail.get('sprtTrgtMinAge', '')}~{policy_detail.get('sprtTrgtMaxAge', '')}\n"
-        f"**주관기관**: {policy_detail.get('rgtrInstCdNm', '')}\n"
-        f"**지원 내용**: {policy_detail.get('plcySprtCn', '')}\n"
-        f"**신청 기간**: {', '.join(policy_detail.get('aplyYmd', []))}\n"
-        f"**신청 방법**: {policy_detail.get('plcyAplyMthdCn', '')}\n"
-        f"**연락처**: {policy_detail.get('etcMttrCn', '')}\n"
-        f"**추가 신청 조건**: {policy_detail.get('addAplyQlfcCndCn', '')}\n"
-        f"**참고 URL**: {policy_detail.get('refUrlAddr1', '')}"
+            f"**정책명**: {policy_detail.get('plcyNm', '')}\n"
+            f"**설명**: {policy_detail.get('plcyExplnCn', '')}\n"
+            f"**카테고리**: {', '.join(policy_detail.get('clsfNm', []) or [])}\n"
+            f"**지원 대상 나이**: {policy_detail.get('sprtTrgtMinAge', '')}~{policy_detail.get('sprtTrgtMaxAge', '')}\n"
+            f"**주관기관**: {policy_detail.get('rgtrInstCdNm', '')}\n"
+            f"**지원 내용**: {policy_detail.get('plcySprtCn', '')}\n"
+            f"**신청 기간**: {', '.join([d for d in policy_detail.get('aplyYmd', []) if d])}\n"
+            f"**신청 방법**: {policy_detail.get('plcyAplyMthdCn', '')}\n"
+            f"**연락처**: {policy_detail.get('etcMttrCn', '')}\n"
+            f"**추가 신청 조건**: {policy_detail.get('addAplyQlfcCndCn', '')}\n"
+            f"**참고 URL**: {policy_detail.get('refUrlAddr1', '')}"
         )
 
         # 5. RAG 프롬프트 생성
