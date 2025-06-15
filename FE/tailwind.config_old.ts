@@ -103,17 +103,12 @@ export default {
 						opacity: '1',
 						transform: 'translateY(0)'
 					}
-				},
-				'revealImage': {
-					'0%': { height: '0px' },
-					'100%': { height: '80px' } // h-20
-				},
+				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'fade-in': 'fade-in 0.3s ease-out',
-				'revealImage': 'revealImage 2.5s ease-out forwards infinite',
+				'fade-in': 'fade-in 0.3s ease-out'
 			}
 		}
 	},

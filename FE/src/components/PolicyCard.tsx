@@ -68,9 +68,8 @@ const PolicyCard: React.FC<PolicyCardProps> = ({ policy }) => {
         ))}
       </ul>
 
-      <div className="flex items-center justify-end">
-        {/* ★★★ 2. "자세히 보기" 버튼만 남기고 URL을 연동합니다 ★★★ */}
-        {policy.refUrlAddr1 && (
+      <div className="flex items-center justify-end mt-2">
+        {policy.refUrlAddr1 ? (
           <a
             href={policy.refUrlAddr1}
             target="_blank"
@@ -79,6 +78,14 @@ const PolicyCard: React.FC<PolicyCardProps> = ({ policy }) => {
           >
             자세히 보기
           </a>
+        ) : (
+          <button
+            disabled
+            className="inline-block px-4 py-1 rounded-md bg-[#FFEFC7] text-gray-400 text-xs font-medium shadow-sm cursor-not-allowed"
+            title="상세 링크가 없습니다"
+          >
+            자세히 보기
+          </button>
         )}
       </div>
     </div>

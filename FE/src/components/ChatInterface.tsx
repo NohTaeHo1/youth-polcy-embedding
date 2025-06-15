@@ -48,12 +48,17 @@ const ChatInterface = () => {
       // 1. 사용자 메시지
       if (msg.type === 'user') {
         return (
-          <div key={msg.id} className="flex justify-end items-center">
-            <img src="/images/chat-user.png" alt="user" className="w-6 h-6 mr-2" />
-            <div /* ... */>
-              {msg.content}
-            </div>
-          </div>
+          <ChatMessage
+          key={msg.id}
+          message={msg.content}
+          isUser={true}
+        />
+          // <div key={msg.id} className="flex justify-end items-center">
+          //   <img src="/images/chat-user.png" alt="user" className="w-6 h-6 mr-2" />
+          //   <div /* ... */>
+          //     {msg.content}
+          //   </div>
+          // </div>
         );
       }
 
