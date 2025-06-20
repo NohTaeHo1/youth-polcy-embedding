@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Query
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from app.database.hybrid_search import HybridSearcher
 from app.database.mongodb import get_mongo_client
 from app.services.pipeline_orchestrator import run_full_pipeline
@@ -185,7 +185,8 @@ async def hybrid_search(
             "metadata": {}
         }
         
-        
+
+                
 @app.post("/llm/predict")
 async def llm_predict(request: SearchRequest) -> Dict:
     """
@@ -225,6 +226,24 @@ async def llm_predict(request: SearchRequest) -> Dict:
         policy_detail = searcher.policy_collection.find_one({"plcyNo": policy_id})
         if not policy_detail:
             return {"message": f"ID {policy_id}에 해당하는 정책을 찾을 수 없습니다.", "response": ""}
+        else:
+            return {
+                "mode": "rag",
+                "policy_details": {
+                    "plcyNm": policy_detail.get("plcyNm"),
+                    "plcyExplnCn": policy_detail.get("plcyExplnCn"),
+                    "plcySprtCn": policy_detail.get("plcySprtCn"),
+                    "aplyYmd": policy_detail.get("aplyYmd"),
+                    "plcyAplyMthdCn": policy_detail.get("plcyAplyMthdCn"),
+                    "clsfNm": policy_detail.get("clsfNm"),
+                    "sprtTrgtMinAge": policy_detail.get("sprtTrgtMinAge"),
+                    "sprtTrgtMaxAge": policy_detail.get("sprtTrgtMaxAge"),
+                    "rgtrInstCdNm": policy_detail.get("rgtrInstCdNm"),
+                    "etcMttrCn": policy_detail.get("etcMttrCn"),
+                    "addAplyQlfcCndCn": policy_detail.get("addAplyQlfcCndCn"),
+                    "refUrlAddr1": policy_detail.get("refUrlAddr1")
+                }
+            }
 
         # 4. 정책 데이터를 context로 포맷팅
         context = (

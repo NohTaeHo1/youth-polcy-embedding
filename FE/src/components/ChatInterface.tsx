@@ -1,99 +1,3 @@
-
-// import React, { useRef, useEffect } from 'react';
-// import { ChatHeader } from './ChatHeader';
-// import ChatMessage from './ChatMessage';
-// import { MessageInput } from './MessageInput';
-// import { OptionButton } from './OptionButton';
-// import { UserProfileCollection } from './UserProfileCollection';
-// import { useConversationFlow } from '@/hooks/useConversationFlow';
-// import { Loader2 } from 'lucide-react';
-// import ProfileInput from './ProfileInput';
-
-
-// const ChatInterface = () => {
-//   const {
-//     messages,
-//     options,
-//     inputDisabled,
-//     handleSendMessage,
-//     handleOptionSelect,
-//     currentStep,
-//     isLoading
-//   } = useConversationFlow();
-
-//   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-//   const scrollToBottom = () => {
-//     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-//   };
-
-//   useEffect(() => {
-//     scrollToBottom();
-//   }, [messages]);
-
-//   return (
-//     <div className="flex flex-col h-full bg-white">
-//       <ChatHeader />
-      
-//       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-//         {messages.map((msg) => (
-//           <ChatMessage 
-//             key={msg.id} 
-//             message={typeof msg.content === 'string' ? msg.content : ''} 
-//             isUser={msg.type === 'user'} 
-//             timestamp={msg.timestamp} 
-//           />
-//         ))}
-        
-//         {isLoading && (
-//           <div className="flex items-center justify-center py-4">
-//             <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
-//             <span className="ml-2 text-gray-600">답변을 생성하고 있습니다...</span>
-//           </div>
-//         )}
-        
-//         {/* Show user profile collection step */}
-//         {/* {currentStep === 'COLLECT_USER_PROFILE' && (
-//           <UserProfileCollection onComplete={handleSendMessage} />
-//         )} */}
-        
-//         {/* Show option buttons */}
-//         {options.length > 0 && !isLoading && (
-//           <div className="space-y-2">
-//             {options.map((option, index) => (
-//               <OptionButton
-//                 key={index}
-//                 text={option}
-//                 onClick={() => handleOptionSelect(option)}
-//               />
-//             ))}
-//           </div>
-//         )}
-        
-//         <div ref={messagesEndRef} />
-//       </div>
-
-//       {!inputDisabled && (
-//         <div className="p-4 border-t border-gray-100">
-//           {/* <MessageInput
-//             onSendMessage={handleSendMessage}
-//             disabled={isLoading}
-//             placeholder="메시지를 입력하세요..."
-//           /> */}
-//           <ProfileInput
-//           onSubmit={({ age, region, category, query }) => {
-//           // handleSendMessage가 (message, profile?) 형태라면 아래처럼
-//           handleSendMessage(query, { age, region, category });
-//         }}
-//         disabled={isLoading || inputDisabled}
-//       />
-//       </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ChatInterface;
 import React, { useRef, useEffect, useState } from 'react';
 import { ChatHeader } from './ChatHeader';
 import ChatMessage from './ChatMessage';
@@ -101,6 +5,7 @@ import { OptionButton } from './OptionButton';
 import { useConversationFlow } from '@/hooks/useConversationFlow';
 import { Loader2 } from 'lucide-react';
 import ProfileInput from './ProfileInput';
+import PolicyCard from './PolicyCard'; // 정책 카드 컴포넌트 임포트
 
 const ChatInterface = () => {
   const {
@@ -112,14 +17,23 @@ const ChatInterface = () => {
     isLoading
   } = useConversationFlow();
 
+  const { setInputDisabled } = useConversationFlow(); // setInputDisabled가 내려와야 함
+
+
   const [input, setInput] = useState(""); // 입력값 상태 추가
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    setInputDisabled(false);
+    // console.log("useEffect 실행됨, inputDisabled를 false로 변경");
   }, [messages]);
 
-  
+  const handleSimulatorClick = () => {
+    // handleOptionSelect 함수를 재활용하여 페이지 이동 로직을 처리합니다.
+    handleOptionSelect("시뮬레이션");
+  };
+
   const handleSend = () => {
     if (!input.trim()) return; // 입력값이 비어있으면 전송하지 않음
     handleSendMessage(input);  // 입력값 전달
@@ -128,52 +42,112 @@ const ChatInterface = () => {
 
   return (
     <div className="flex flex-col h-full bg-transparent">
-      {/* 메시지 영역 */}
-      <div className="flex-1 overflow-y-auto px-2 py-4 space-y-4">
-        {messages.map((msg) => {
-          // RAG에서 온 정책카드라면
-          if (msg.type === 'policyCard' && msg.source === 'RAG' && msg.policy_detail) {
+    {/* 메시지 영역 */}
+    <div className="flex-1 overflow-y-auto px-2 py-4 space-y-4">
+    {messages.map((msg) => {
+      // 1. 사용자 메시지
+      if (msg.type === 'user') {
+        return (
+          <ChatMessage
+          key={msg.id}
+          message={msg.content}
+          isUser={true}
+        />
+          // <div key={msg.id} className="flex justify-end items-center">
+          //   <img src="/images/chat-user.png" alt="user" className="w-6 h-6 mr-2" />
+          //   <div /* ... */>
+          //     {msg.content}
+          //   </div>
+          // </div>
+        );
+      }
+
+      // 2. RAG 정책 카드 처리 (중첩된 구조에 맞게 접근)
+      //    msg.content가 존재하고, 그 안의 mode가 'rag'인지 확인합니다.
+      if (msg.content && typeof msg.content === 'object' && msg.content.mode === 'rag' && msg.content.policy_detail) {
             return (
-              <PolicyCard
-                key={msg.id}
-                policy={msg.policy_detail}
-              />
+              // 부모 div로 카드와 추가 UI를 함께 감싸줍니다.
+              <div key={msg.id} className="space-y-2">
+                {/* 2-1. 기존 정책 카드 */}
+                <div className="flex items-start">
+                  <PolicyCard policy={msg.content.policy_detail} />
+                </div>
+
+                {/* 2-2. 시뮬레이터 안내 채팅창 (고정 문구) */}
+                <div className="flex items-center">
+                  <img src="/images/cloud-whale.png" alt="whale" className="w-9 h-5 mr-2" />
+                  <div
+                    className="rounded-xl px-3 py-1 text-[#2D2D2D] max-w-xs break-words"
+                    style={{ background: "#DDE9FB", borderRadius: "12px", padding: "10px" }}
+                  >
+                    더 정확한 정책 지원을 알아보려면 시뮬레이터를 사용해보세요!
+                  </div>
+                </div>
+                
+                {/* 2-3. 시뮬레이터 버튼 */}
+                <div className="flex items-start pl-11"> {/* 아이콘 너비만큼 왼쪽 여백 추가 */}
+                   <button
+                    onClick={handleSimulatorClick}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200"
+                    // 요청하신 스타일: 밝은 회색 배경(#F1F1F1), 진한 회색 글자, 외곽선 없음
+                    style={{ backgroundColor: '#F1F1F1', color: '#555555', border: 'none' }}
+                  >
+                    <img src="/images/calendar-emoji.jpg" alt="시뮬레이터" className="w-4 h-4" />
+                    시뮬레이터로 계산하기
+                  </button>
+                </div>
+              </div>
             );
           }
-          // LLM에서 온 메시지거나 일반 메시지라면
-          return (
-            <ChatMessage
-              key={msg.id}
-              message={msg.content}
-              isUser={msg.type === 'user'}
-              timestamp={msg.timestamp}
-            />
-          );
-})}
-        {/* 정책 카드 메시지 예시 */}
-        {/* 
-        <PolicyCard
-          title="서울시 청년 월세 지원"
-          details={[
-            "월 최대 20만원 지원",
-            "만 19~39세 대상",
-            "소득기준: 중위소득 150% 이하"
-          ]}
-          onDetailClick={() => {}}
-        />
-        */}
-        {/* 시뮬레이터 버튼 메시지 예시 */}
-        {/* 
-        <SimulatorButton onClick={() => {}} />
-        */}
-        <div ref={messagesEndRef} />
-      </div>
+
+      // 3. LLM 일반 답변 및 그 외 모든 봇 메시지 처리
+      if (msg.type === 'bot') {
+        // msg.content가 문자열이면 그대로, 객체면 JSON 문자열로 변환하여 안전하게 렌더링합니다.
+        const messageContent =
+          typeof msg.content === 'object' && msg.content !== null
+            ? JSON.stringify(msg.content)
+            : msg.content;
+
+        return (
+          <div key={msg.id} className="flex items-center">
+            <img src="/images/cloud-whale.png" alt="whale" className="w-9 h-5 mr-2" />
+            <div
+              className="rounded-xl px-3 py-1 text-[#2D2D2D] max-w-xs break-words"
+              style={{
+                background: "#DDE9FB",
+                borderRadius: "12px",
+                padding: "10px",
+                gap: "8px",
+              }}
+            >
+              {messageContent}
+            </div>
+          </div>
+        );
+      }
+
+      // 예외 케이스 처리
+      return null;
+    })}
+      {/* 답변 대기 중일 때 로딩 메시지 */}
+      {isLoading && (
+        <div className="flex items-center gap-2">
+          <img src="/images/cloud-whale.png" alt="whale" className="w-6 h-6" />
+          <div className="rounded-xl bg-[#E6F0FA] px-3 py-1 text-[#2D2D2D80]">
+            ... 지금 생각 중 입니다
+          </div>
+          <div className="relative ml-2">
+          </div>
+        </div>
+      )}
+      <div ref={messagesEndRef} />
+    </div>
       {/* 입력창 */}
       <div className="p-3 bg-white border-t flex items-center gap-2">
         {/* 이미지 아이콘 버튼 */}
         <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#E8F0FE]">
           <img
-            src="/images/gallery.png" // public/images/image-icon.png
+            src="/images/gallery.png"
             alt="이미지 첨부"
             className="w-6 h-6"
             style={{ filter: 'invert(36%) sepia(4%) saturate(0%) hue-rotate(202deg) brightness(93%) contrast(89%)' }}
@@ -181,6 +155,7 @@ const ChatInterface = () => {
         </button>
         {/* 입력창 + 전송버튼 감싸는 박스 */}
         <div className="flex flex-1 items-center bg-[#E8F0FE] rounded-full px-3 py-2">
+          {console.log('inputDisabled:', inputDisabled, 'isLoading:', isLoading)}
           <input
             className="flex-1 bg-transparent border-none outline-none text-[#6B6C74] placeholder-[#6B6C74] text-sm"
             placeholder="궁금한 내용을 입력해 주세요"
@@ -206,53 +181,7 @@ const ChatInterface = () => {
       </div>
     </div>
   );
-  // return (
-  //   <div className="flex flex-col h-full bg-white">
-  //     <ChatHeader />
-  //     <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-  //       {messages.map((msg) => (
-  //         <ChatMessage
-  //           key={msg.id}
-  //           message={typeof msg.content === 'string' ? msg.content : ''}
-  //           isUser={msg.type === 'user'}
-  //           timestamp={msg.timestamp}
-  //         />
-  //       ))}
 
-  //       {isLoading && (
-  //         <div className="flex items-center justify-center py-4">
-  //           <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
-  //           <span className="ml-2 text-gray-600">답변을 생성하고 있습니다...</span>
-  //         </div>
-  //       )}
-
-  //       {options.length > 0 && !isLoading && (
-  //         <div className="space-y-2">
-  //           {options.map((option, index) => (
-  //             <OptionButton
-  //               key={index}
-  //               text={option}
-  //               onClick={() => handleOptionSelect(option)}
-  //             />
-  //           ))}
-  //         </div>
-  //       )}
-
-  //       <div ref={messagesEndRef} />
-  //     </div>
-
-  //     {!inputDisabled && (
-  //       <div className="p-4 border-t border-gray-100">
-  //         <ProfileInput
-  //           onSubmit={({ age, region, category, query }) => {
-  //             handleSendMessage(query, { age, region, category });
-  //           }}
-  //           disabled={isLoading || inputDisabled}
-  //         />
-  //       </div>
-  //     )}
-  //   </div>
-  // );
 };
 
 export default ChatInterface;
