@@ -25,6 +25,9 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				fontFamily: {
+					sans: ['Noto Sans KR', 'Apple SD Gothic Neo', 'sans-serif'],
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'

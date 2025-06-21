@@ -208,3 +208,42 @@ class HybridSearcher:
             else:
                 serialized[key] = value
         return serialized
+    
+    def build_strict_and_query(
+        self,
+        min_age: Optional[int] = None,
+        max_age: Optional[int] = None,
+        region: Optional[str] = None,
+    ) -> Dict:
+        and_conditions = []
+        if min_age is not None:
+            and_conditions.append({"sprtTrgtMinAge": {"$lte": str(min_age)}})
+        if max_age is not None:
+            and_conditions.append({"sprtTrgtMaxAge": {"$gte": str(max_age)}})
+        if region:
+            and_conditions.append({
+                "$or": [
+                    {"rgtrInstCdNm": {"$regex": region, "$options": "i"}},
+                    {"sprvsnInstCdNm": {"$regex": region, "$options": "i"}},
+                    {"rgtrUpInstCdNm": {"$regex": region, "$options": "i"}},
+                    {"rgtrHghrkInstCdNm": {"$regex": region, "$options": "i"}}
+                ]
+            })
+        return {"$and": and_conditions} if and_conditions else {}
+    
+    def find_policies_by_conditions(
+        self,
+        min_age: Optional[int] = None,
+        max_age: Optional[int] = None,
+        region: Optional[str] = None,
+    ) -> List[Dict]:
+        """조건에 맞는 정책 전체 데이터를 반환"""
+        query = self.build_strict_and_query(
+            min_age=min_age,
+            max_age=max_age,
+            region=region,
+        )
+        cursor = self.policy_collection.find(query)
+
+        results = [self.serialize_mongo_doc(doc) for doc in cursor]
+        return results

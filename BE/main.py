@@ -83,7 +83,7 @@ async def read_root():
 #     return result
 
 class SearchRequest(BaseModel):
-    query: str
+    query: Optional[str] = None
     min_age: Optional[int] = None
     max_age: Optional[int] = None
     model: Optional[str] = "gemma3:1b"  # LLM 모델 이름
@@ -185,7 +185,25 @@ async def hybrid_search(
             "metadata": {}
         }
         
-
+@app.post("/api/policy/search")
+async def search_policies(request: SearchRequest) -> Dict:
+    searcher = HybridSearcher()
+    results = searcher.find_policies_by_conditions(
+        min_age=request.min_age,
+        max_age=request.max_age,
+        region=request.region
+    )
+    if not results:
+        return {
+            "status": "no_results",
+            "message": "조건에 맞는 정책이 없습니다.",
+            "results": []
+        }
+    return {
+        "status": "success",
+        "count": len(results),
+        "results": results
+    }
                 
 @app.post("/llm/predict")
 async def llm_predict(request: SearchRequest) -> Dict:

@@ -102,11 +102,13 @@ const ChatInterface = () => {
 
       // 3. LLM 일반 답변 및 그 외 모든 봇 메시지 처리
       if (msg.type === 'bot') {
-        // msg.content가 문자열이면 그대로, 객체면 JSON 문자열로 변환하여 안전하게 렌더링합니다.
-        const messageContent =
-          typeof msg.content === 'object' && msg.content !== null
-            ? JSON.stringify(msg.content)
-            : msg.content;
+        let messageContent;
+        if (typeof msg.content === 'object' && msg.content !== null) {
+          // content 필드가 있으면 그것만 출력
+          messageContent = msg.content.content || JSON.stringify(msg.content);
+        } else {
+          messageContent = msg.content;
+        }
 
         return (
           <div key={msg.id} className="flex items-center">

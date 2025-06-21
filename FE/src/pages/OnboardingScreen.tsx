@@ -2,19 +2,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronDown, Home, MessageCircle, Calculator, FileText, ChevronRight } from 'lucide-react';
+import { useUserInfo } from '../store/userInfoStore';
+
 
 const OnboardingScreen = () => {
     const navigate = useNavigate();
 
     const [userInfo, setUserInfo] = useState({
         age: '',
-        district: '',
+        region: '',
         gender: '',
         householdType: ''
     });
+    
+    const setUserInfoGlobal = useUserInfo(state => state.setUserInfo);
 
     const handleSubmit = () => {
         console.log("입력 정보:", userInfo); // → 여기에 fetch나 axios 추가 예정
+        setUserInfoGlobal(userInfo);
         navigate("/main");
     };
 
@@ -49,8 +54,8 @@ const OnboardingScreen = () => {
                     <label className="block text-gray-800 font-bold text-sm mb-2 mt-10">거주지</label>
                     <div className="relative">
                         <select
-                            value={userInfo.district}
-                            onChange={(e) => setUserInfo({ ...userInfo, district: e.target.value })}
+                            value={userInfo.region}
+                            onChange={(e) => setUserInfo({ ...userInfo, region: e.target.value })}
                             className="w-full p-3 border border-gray-300 rounded text-sm text-gray-400 appearance-none bg-white h-full"
                         >
                             <option value="">거주하고 있는 지역구를 선택해주세요</option>
