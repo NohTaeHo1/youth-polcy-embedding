@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Query
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from app.database.hybrid_search import HybridSearcher
 from app.database.mongodb import get_mongo_client
 from app.services.pipeline_orchestrator import run_full_pipeline
@@ -83,7 +83,7 @@ async def read_root():
 #     return result
 
 class SearchRequest(BaseModel):
-    query: str
+    query: Optional[str] = None
     min_age: Optional[int] = None
     max_age: Optional[int] = None
     model: Optional[str] = "gemma3:1b"  # LLM 모델 이름
@@ -185,7 +185,26 @@ async def hybrid_search(
             "metadata": {}
         }
         
-        
+@app.post("/api/policy/search")
+async def search_policies(request: SearchRequest) -> Dict:
+    searcher = HybridSearcher()
+    results = searcher.find_policies_by_conditions(
+        min_age=request.min_age,
+        max_age=request.max_age,
+        region=request.region
+    )
+    if not results:
+        return {
+            "status": "no_results",
+            "message": "조건에 맞는 정책이 없습니다.",
+            "results": []
+        }
+    return {
+        "status": "success",
+        "count": len(results),
+        "results": results
+    }
+                
 @app.post("/llm/predict")
 async def llm_predict(request: SearchRequest) -> Dict:
     """
@@ -225,20 +244,38 @@ async def llm_predict(request: SearchRequest) -> Dict:
         policy_detail = searcher.policy_collection.find_one({"plcyNo": policy_id})
         if not policy_detail:
             return {"message": f"ID {policy_id}에 해당하는 정책을 찾을 수 없습니다.", "response": ""}
+        else:
+            return {
+                "mode": "rag",
+                "policy_details": {
+                    "plcyNm": policy_detail.get("plcyNm"),
+                    "plcyExplnCn": policy_detail.get("plcyExplnCn"),
+                    "plcySprtCn": policy_detail.get("plcySprtCn"),
+                    "aplyYmd": policy_detail.get("aplyYmd"),
+                    "plcyAplyMthdCn": policy_detail.get("plcyAplyMthdCn"),
+                    "clsfNm": policy_detail.get("clsfNm"),
+                    "sprtTrgtMinAge": policy_detail.get("sprtTrgtMinAge"),
+                    "sprtTrgtMaxAge": policy_detail.get("sprtTrgtMaxAge"),
+                    "rgtrInstCdNm": policy_detail.get("rgtrInstCdNm"),
+                    "etcMttrCn": policy_detail.get("etcMttrCn"),
+                    "addAplyQlfcCndCn": policy_detail.get("addAplyQlfcCndCn"),
+                    "refUrlAddr1": policy_detail.get("refUrlAddr1")
+                }
+            }
 
         # 4. 정책 데이터를 context로 포맷팅
         context = (
-        f"**정책명**: {policy_detail.get('plcyNm', '')}\n"
-        f"**설명**: {policy_detail.get('plcyExplnCn', '')}\n"
-        f"**카테고리**: {', '.join(policy_detail.get('clsfNm', []))}\n"
-        f"**지원 대상 나이**: {policy_detail.get('sprtTrgtMinAge', '')}~{policy_detail.get('sprtTrgtMaxAge', '')}\n"
-        f"**주관기관**: {policy_detail.get('rgtrInstCdNm', '')}\n"
-        f"**지원 내용**: {policy_detail.get('plcySprtCn', '')}\n"
-        f"**신청 기간**: {', '.join(policy_detail.get('aplyYmd', []))}\n"
-        f"**신청 방법**: {policy_detail.get('plcyAplyMthdCn', '')}\n"
-        f"**연락처**: {policy_detail.get('etcMttrCn', '')}\n"
-        f"**추가 신청 조건**: {policy_detail.get('addAplyQlfcCndCn', '')}\n"
-        f"**참고 URL**: {policy_detail.get('refUrlAddr1', '')}"
+            f"**정책명**: {policy_detail.get('plcyNm', '')}\n"
+            f"**설명**: {policy_detail.get('plcyExplnCn', '')}\n"
+            f"**카테고리**: {', '.join(policy_detail.get('clsfNm', []) or [])}\n"
+            f"**지원 대상 나이**: {policy_detail.get('sprtTrgtMinAge', '')}~{policy_detail.get('sprtTrgtMaxAge', '')}\n"
+            f"**주관기관**: {policy_detail.get('rgtrInstCdNm', '')}\n"
+            f"**지원 내용**: {policy_detail.get('plcySprtCn', '')}\n"
+            f"**신청 기간**: {', '.join([d for d in policy_detail.get('aplyYmd', []) if d])}\n"
+            f"**신청 방법**: {policy_detail.get('plcyAplyMthdCn', '')}\n"
+            f"**연락처**: {policy_detail.get('etcMttrCn', '')}\n"
+            f"**추가 신청 조건**: {policy_detail.get('addAplyQlfcCndCn', '')}\n"
+            f"**참고 URL**: {policy_detail.get('refUrlAddr1', '')}"
         )
 
         # 5. RAG 프롬프트 생성
