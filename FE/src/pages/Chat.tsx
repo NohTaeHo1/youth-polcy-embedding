@@ -10,6 +10,7 @@ const Chat = () => {
         navigate('/main');
         // 또는, 단순히 이전 페이지로 이동하려면 navigate(-1); 을 사용합니다.[6]
     };
+  
   return (
     <div className="h-screen w-full bg-[#F8FAFF] flex flex-col items-center">
       {/* 상단 헤더 */}

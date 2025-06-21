@@ -15,6 +15,10 @@ const MainScreen = () => {
         navigate('/policy'); // PolicyListScreen으로 이동
         };
 
+    const handleStartSimulator = () => {
+        navigate('/simulator'); // SimulatorScreen으로 이동
+    };
+
     return (
         <div className="w-full max-w-sm mx-auto h-screen bg-white relative flex flex-col font-sans overflow-hidden">
 
@@ -102,7 +106,7 @@ const MainScreen = () => {
                     
                     {/* 하단: 버튼 영역 */}
                     <div className="px-6 py-2.5 bg-[#ECF1FE]">
-                        <button className="w-full flex items-center justify-center gap-2 text-[#2A6FD4] text-[14px] font-semibold hover:text-[#1e5ba8] transition-colors duration-200">
+                        <button className="w-full flex items-center justify-center gap-2 text-[#2A6FD4] text-[14px] font-semibold hover:text-[#1e5ba8] transition-colors duration-200" onClick={handleStartChat}>
                         <svg width="16" height="16" fill="none" className="text-current">
                             <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
                             <path d="M8 4v8M4 8h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -126,7 +130,7 @@ const MainScreen = () => {
 
                         <div className="grid grid-cols-2 gap-3">
                             {/* 주거 카드 */}
-                            <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300">
+                            <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300" onClick={handleStartSimulator}>
                             <div className="flex items-center justify-between mb-2">
                                 <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[11px] font-semibold">
                                 주거 &gt;
@@ -141,7 +145,7 @@ const MainScreen = () => {
                                 />
                                 </div>
                             </div>
-                            <p className="text-[10px] text-gray-600 leading-[14px] break-keep">
+                            <p className="text-[9.5px] text-gray-600 leading-[14px] break-keep">
                                 주거 지원금<br />
                                 "나는 얼마나 받을 수 있지?"<br />
                                 바로 확인해보세요.
@@ -149,7 +153,7 @@ const MainScreen = () => {
                             </div>
 
                             {/* 일자리 카드 */}
-                            <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300">
+                            <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300" onClick={handleStartSimulator}>
                             <div className="flex items-center justify-between mb-2">
                                 <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[11px] font-semibold">
                                 일자리 &gt;
@@ -164,7 +168,7 @@ const MainScreen = () => {
                                 />
                                 </div>
                             </div>
-                            <p className="text-[10px] text-gray-600 leading-[14px] break-keep">
+                            <p className="text-[9.5px] text-gray-600 leading-[14px] break-keep">
                                 지금 취업 준비 중이세요?<br />
                                 나에게 딱 맞는 일자리가<br />
                                 있는지 확인해보세요.
@@ -172,7 +176,7 @@ const MainScreen = () => {
                             </div>
 
                             {/* 창업 카드 */}
-                            <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300">
+                            <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300" onClick={handleStartSimulator}>
                             <div className="flex items-center justify-between mb-2">
                                 <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[11px] font-semibold">
                                 창업 &gt;
@@ -187,7 +191,7 @@ const MainScreen = () => {
                                 />
                                 </div>
                             </div>
-                            <p className="text-[10px] text-gray-600 leading-[14px] break-keep">
+                            <p className="text-[8.5px] text-gray-600 leading-[14px] break-keep">
                                 세상을 바꿀 사업아이템이 있다?<br />
                                 돈은 걱정하지 마세요.<br />
                                 청년창업자금 확인해보세요.
@@ -195,7 +199,7 @@ const MainScreen = () => {
                             </div>
 
                             {/* 교육 카드 */}
-                            <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300">
+                            <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300" onClick={handleStartSimulator}>
                             <div className="flex items-center justify-between mb-2">
                                 <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[11px] font-semibold">
                                 교육 &gt;
@@ -210,7 +214,7 @@ const MainScreen = () => {
                                 />
                                 </div>
                             </div>
-                            <p className="text-[10px] text-gray-600 leading-[14px] break-keep">
+                            <p className="text-[8.5px] text-gray-600 leading-[14px] break-keep">
                                 세상에 모든 교육은 다 있다!<br />
                                 디자인, 코딩, 엑셀 등<br />
                                 무료로 자격증을 취득해보세요.
@@ -238,7 +242,7 @@ const MainScreen = () => {
                         />
                         <span className="text-s text-gray-400 mt-1">청년 정책</span>
                     </div>
-                    <div className="flex flex-col items-center" onClick={handleStartChat}>
+                    <div className="flex flex-col items-center" onClick={handleStartSimulator}>
                         <img
                             src="/images/시뮬레이터.svg"
                             alt="시뮬레이터 아이콘"

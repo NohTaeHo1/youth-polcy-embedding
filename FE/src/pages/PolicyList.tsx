@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { policies } from "../data/policies";
-
+import { useNavigate } from 'react-router-dom';
 const categories = [
   { label: "전체", value: "all" },
   { label: "주거", value: "주거" },
@@ -19,11 +19,27 @@ const statusStyle = {
   gray: "bg-gray-200 text-gray-500 border-gray-300"
 };
 
+
 const PolicyList: React.FC = () => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [search, setSearch] = useState("");
   const [selectedPolicy, setSelectedPolicy] = useState(null);
+  const handleStartChat = () => {
+      navigate('/chat'); // ChatScreen으로 이동
+      };
 
+  const handelStartPolicyList = () => {
+      navigate('/policy'); // PolicyListScreen으로 이동
+      };
+
+  const handleStartSimulator = () => {
+      navigate('/simulator'); // SimulatorScreen으로 이동
+  };
+
+  const handelStartHome = () => {
+      navigate('/main'); // HomeScreen으로 이동
+  }
   const filteredPolicies = policies.filter(policy => {
     const matchCategory = selectedCategory === "all" || policy.category === selectedCategory;
     const matchSearch =
