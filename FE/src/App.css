@@ -41,11 +41,11 @@
   color: #888;
 }
 
-.hide-scroll {
+/* .hide-scroll {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
-}
+} */
 
-.hide-scroll::-webkit-scrollbar {
+/* .hide-scroll::-webkit-scrollbar {
   display: none !important;
-}
+} */

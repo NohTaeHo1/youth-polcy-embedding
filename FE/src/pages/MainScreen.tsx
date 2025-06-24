@@ -20,9 +20,9 @@ const MainScreen = () => {
     };
 
     return (
-        <div className="w-full max-w-sm mx-auto h-screen bg-white relative flex flex-col font-sans overflow-hidden">
+        <div className="min-h-screen flex flex-col bg-white font-sans">
 
-            <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <div className="flex-1 overflow-y-auto scrollbar-hide relative">
                 <div className="h-80 relative" style={{ backgroundColor: '#2A6FD4' }}>
                     <div className="absolute top-4 left-8 right-8">
                     <img
@@ -81,7 +81,7 @@ const MainScreen = () => {
                 </div>
 
                 {/* 카드 - 헤더와 적절한 간격으로 배치 */}
-                <div className="absolute top-[225px] left-1/2 -translate-x-1/2 w-full max-w-[340px] z-10 px-4">
+                <div className="absolute top-[225px] left-1/2 -translate-x-1/2 w-full z-10 px-4">
                 <div className="bg-white rounded-2xl shadow-[0_6px_16px_0_rgba(0,0,0,0.15)] overflow-hidden">
 
                     {/* 상단: 혜택 정보 영역 */}
@@ -132,7 +132,7 @@ const MainScreen = () => {
                             {/* 주거 카드 */}
                             <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300" onClick={handleStartSimulator}>
                             <div className="flex items-center justify-between mb-2">
-                                <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[11px] font-semibold">
+                                <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[13px] font-semibold">
                                 주거 &gt;
                                 </span>
                             </div>
@@ -145,7 +145,7 @@ const MainScreen = () => {
                                 />
                                 </div>
                             </div>
-                            <p className="text-[9.5px] text-gray-600 leading-[14px] break-keep">
+                            <p className="text-[11px] text-gray-600 leading-[14px] break-keep">
                                 주거 지원금<br />
                                 "나는 얼마나 받을 수 있지?"<br />
                                 바로 확인해보세요.
@@ -155,7 +155,7 @@ const MainScreen = () => {
                             {/* 일자리 카드 */}
                             <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300" onClick={handleStartSimulator}>
                             <div className="flex items-center justify-between mb-2">
-                                <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[11px] font-semibold">
+                                <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[13px] font-semibold">
                                 일자리 &gt;
                                 </span>
                             </div>
@@ -168,7 +168,7 @@ const MainScreen = () => {
                                 />
                                 </div>
                             </div>
-                            <p className="text-[9.5px] text-gray-600 leading-[14px] break-keep">
+                            <p className="text-[11px] text-gray-600 leading-[14px] break-keep">
                                 지금 취업 준비 중이세요?<br />
                                 나에게 딱 맞는 일자리가<br />
                                 있는지 확인해보세요.
@@ -178,7 +178,7 @@ const MainScreen = () => {
                             {/* 창업 카드 */}
                             <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300" onClick={handleStartSimulator}>
                             <div className="flex items-center justify-between mb-2">
-                                <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[11px] font-semibold">
+                                <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[13px] font-semibold">
                                 창업 &gt;
                                 </span>
                             </div>
@@ -191,7 +191,7 @@ const MainScreen = () => {
                                 />
                                 </div>
                             </div>
-                            <p className="text-[8.5px] text-gray-600 leading-[14px] break-keep">
+                            <p className="text-[11px] text-gray-600 leading-[14px] break-keep">
                                 세상을 바꿀 사업아이템이 있다?<br />
                                 돈은 걱정하지 마세요.<br />
                                 청년창업자금 확인해보세요.
@@ -201,7 +201,7 @@ const MainScreen = () => {
                             {/* 교육 카드 */}
                             <div className="bg-white rounded-xl shadow-[0_8px_25px_0_rgba(0,0,0,0.15),0_3px_10px_0_rgba(0,0,0,0.1)] border border-gray-50 p-4 hover:shadow-[0_12px_35px_0_rgba(0,0,0,0.2),0_5px_15px_0_rgba(0,0,0,0.15)] transition-shadow duration-300" onClick={handleStartSimulator}>
                             <div className="flex items-center justify-between mb-2">
-                                <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[11px] font-semibold">
+                                <span className="bg-blue-50 text-[#2A6FD4] px-3 py-1 rounded-full text-[13px] font-semibold">
                                 교육 &gt;
                                 </span>
                             </div>
@@ -214,7 +214,7 @@ const MainScreen = () => {
                                 />
                                 </div>
                             </div>
-                            <p className="text-[8.5px] text-gray-600 leading-[14px] break-keep">
+                            <p className="text-[11px] text-gray-600 leading-[14px] break-keep">
                                 세상에 모든 교육은 다 있다!<br />
                                 디자인, 코딩, 엑셀 등<br />
                                 무료로 자격증을 취득해보세요.
@@ -224,38 +224,22 @@ const MainScreen = () => {
                     </div>
                 </div>
             </div>
-            <div className="h-20 bg-white/70 backdrop-blur-sm rounded-t-3xl shadow-lg border-t border-gray-100">
+            <div className="h-20 bg-white/70 backdrop-blur-sm rounded-t-3xl shadow-lg border-t border-gray-100 z-10">
                 <div className="flex justify-around items-center pt-4">
                     <div className="flex flex-col items-center">
-                        <img
-                            src="/images/홈.svg"
-                            alt="홈 아이콘"
-                            className="w-6 h-6 object-contain"
-                        />
+                        <img src="/images/홈.svg" alt="홈 아이콘" className="w-6 h-6 object-contain" />
                         <span className="text-s text-blue-600 mt-1">Home</span>
                     </div>
                     <div className="flex flex-col items-center" onClick={handelStartPolicyList}>
-                        <img
-                            src="/images/청년정책.svg"
-                            alt="청년정책 아이콘"
-                            className="w-6 h-6 object-contain"
-                        />
+                        <img src="/images/청년정책.svg" alt="청년정책 아이콘" className="w-6 h-6 object-contain" />
                         <span className="text-s text-gray-400 mt-1">청년 정책</span>
                     </div>
                     <div className="flex flex-col items-center" onClick={handleStartSimulator}>
-                        <img
-                            src="/images/시뮬레이터.svg"
-                            alt="시뮬레이터 아이콘"
-                            className="w-6 h-6 object-contain"
-                        />
+                        <img src="/images/시뮬레이터.svg" alt="시뮬레이터 아이콘" className="w-6 h-6 object-contain" />
                         <span className="text-s text-gray-400 mt-1">시뮬레이터</span>
                     </div>
                     <div className="flex flex-col items-center" onClick={handleStartChat}>
-                        <img
-                            src="/images/챗봇.svg"
-                            alt="챗봇 아이콘"
-                            className="w-6 h-6 object-contain"
-                        />
+                        <img src="/images/챗봇.svg" alt="챗봇 아이콘" className="w-6 h-6 object-contain" />
                         <span className="text-s text-gray-400 mt-1">AI 상담</span>
                     </div>
                 </div>

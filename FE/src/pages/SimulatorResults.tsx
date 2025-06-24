@@ -31,7 +31,9 @@ export const SimulatorResult: React.FC<SimulatorResultProps> = ({
   const handleStartChat = () => {
     navigate('/chat');
   };
-
+  const handlePolicyDetail = (id: number) => {
+    navigate(`/policy/${id}`, { state: { id } }); // Use numeric ID in the path
+  };
   return (
     <div className="flex flex-col h-screen bg-white">
       {/* 헤더 */}
@@ -73,7 +75,7 @@ export const SimulatorResult: React.FC<SimulatorResultProps> = ({
           <div className="bg-white rounded-xl shadow-[0_2px_8px_0_rgba(0,0,0,0.08)] border border-gray-200 p-4">
             <div className="flex items-start justify-between mb-1">
               <h3 className="text-[16px] font-semibold text-gray-900 leading-tight flex-1 pr-3">역세권청년주택</h3>
-              <button className="bg-blue-100 text-[#2563EB] px-4 py-1 rounded-full text-[14px] font-semibold border border-blue-200 flex-shrink-0">
+              <button className="bg-blue-100 text-[#2563EB] px-4 py-1 rounded-full text-[14px] font-semibold border border-blue-200 flex-shrink-0" onClick={() => handlePolicyDetail(1)}>
                 신청
               </button>
             </div>

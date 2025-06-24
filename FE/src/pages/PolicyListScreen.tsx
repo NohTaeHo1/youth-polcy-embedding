@@ -58,7 +58,7 @@ const PolicyListScreen = () => {
   };
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/policy/search', {
+    fetch('http://192.168.0.15:8000/api/policy/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userInfo)
