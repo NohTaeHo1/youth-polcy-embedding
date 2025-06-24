@@ -43,3 +43,15 @@ export interface ConversationFlowResult {
   currentStep: ConversationStep;
   isLoading: boolean;
 }
+
+export interface SimulatorFormData {
+  monthlyRent: number;
+  deposit: number;
+  householdSize: number;
+}
+
+export interface PolicyResult {
+  title: string;
+  description: string;
+  support: string;
+}

@@ -97,7 +97,7 @@
 //     isLoading
 //   };
 // };
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ConversationFlowResult } from '@/types/conversation';
 import { useUserProfile } from './useUserProfile';
 import { useMessages } from './useMessages';
@@ -141,8 +141,8 @@ export const useConversationFlow = (): ConversationFlowResult => {
 
   // 대화 초기화 함수
   const initializeConversation = () => {
-  if (isInitialized) return;
-  let welcomeMessage = "안녕하세요! 청년정책 안내 서비스입니다. GPT를 활용한 지능형 정책 정보를 제공합니다.";
+    if (isInitialized) return;
+    let welcomeMessage = "안녕! 나는 정책 네비게이터 ‘둥고’야. 어떤 정책이 궁금해?";
   if (userProfile && userProfile.interests) {
     welcomeMessage += `\n\n${userProfile.interests}에 관심이 있으신 것으로 확인되었습니다. 맞춤 정보를 제공해드리겠습니다.`;
     setConversationContext([
@@ -157,12 +157,14 @@ export const useConversationFlow = (): ConversationFlowResult => {
     ]);
   }
   addBotMessage(welcomeMessage);
-  setTimeout(() => {
-    addBotMessage("궁금한 정책을 아래 입력란에 자유롭게 입력해 주세요. (나이, 지역, 분야는 선택사항입니다)");
-    setIsInitialized(true);
-    setInputDisabled(false);
+  // ★ 여기 추가!
+  setInputDisabled(false); // ← 대화 초기화 시 무조건 입력창 활성화
+  // setTimeout(() => {
+  //   addBotMessage("궁금한 정책을 아래 입력란에 자유롭게 입력해 주세요. (나이, 지역, 분야는 선택사항입니다)");
+  //   setIsInitialized(true);
+  //   setInputDisabled(false);
     
-  }, 500);
+  // }, 500);
 };
 
   useEffect(() => {
@@ -173,6 +175,7 @@ export const useConversationFlow = (): ConversationFlowResult => {
     messages,
     options,
     inputDisabled,
+    setInputDisabled,
     handleSendMessage,
     handleOptionSelect,
     isLoading
